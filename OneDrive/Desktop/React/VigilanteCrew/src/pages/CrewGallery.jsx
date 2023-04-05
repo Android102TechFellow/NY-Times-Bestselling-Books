@@ -11,7 +11,7 @@ const CrewGallery = () => {
 
         const fetchPosts = async () => {
             const { data } = await supabase
-            .from('Posts')
+            .from('members')
             .select()
             .order('created_at', { ascending: true });
 
@@ -20,12 +20,21 @@ const CrewGallery = () => {
         fetchPosts().catch(console.error);
     }, []);
     
+    console.log(posts);
     return (
         <div className="CrewGallery">
             {
                 posts && posts.length > 0 ?
                 posts.map((post,index) => 
-                   <Card id={post.id} title={post.title} author={post.author} description={post.description}/>
+                <div className="CrewGalleryCard" key={index} style={{ boxShadow: `0 0 5px ${post.color}` }}>
+                    <h1>Name: {post.name}</h1>
+                    <h2>Code Name: {post.codename}</h2>
+                    <h3>Gender: {post.gender} | Age: {post.age}</h3>
+                    <h3>Main Ability: {post.main_ability}</h3>
+                    <h3>Main Weapon: {post.main_weapon}</h3>
+                    
+                </div>
+
                 ) : 
                 (
                   <div>
@@ -35,7 +44,7 @@ const CrewGallery = () => {
               )}
             
         </div>  
-)
+    );
 }
 
 export default CrewGallery;
