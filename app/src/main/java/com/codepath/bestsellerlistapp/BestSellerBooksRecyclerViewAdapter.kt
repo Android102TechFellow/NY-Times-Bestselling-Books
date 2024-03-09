@@ -1,10 +1,16 @@
 package com.codepath.bestsellerlistapp
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.codepath.bestsellerlistapp.R.id
 
 /**
@@ -29,8 +35,13 @@ class BestSellerBooksRecyclerViewAdapter(
      */
     inner class BookViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         var mItem: BestSellerBook? = null
+        val mBookRanking: TextView = mView.findViewById<View>(id.ranking) as TextView
+        val mBookImage: ImageView = mView.findViewById<View>(id.book_image) as ImageView
         val mBookTitle: TextView = mView.findViewById<View>(id.book_title) as TextView
         val mBookAuthor: TextView = mView.findViewById<View>(id.book_author) as TextView
+        val mBookDescription: TextView = mView.findViewById<View>(id.book_description) as TextView
+        val mBuyBtn: Button = mView.findViewById<Button>(id.buy_button) as Button
+
 
         override fun toString(): String {
             return mBookTitle.toString() + " '" + mBookAuthor.text + "'"
@@ -44,8 +55,16 @@ class BestSellerBooksRecyclerViewAdapter(
         val book = books[position]
 
         holder.mItem = book
+        holder.mBookRanking.text = book.rank.toString()
+        Glide.with(holder.mView).load(book.bookImageUrl).centerInside().into(holder.mBookImage)
         holder.mBookTitle.text = book.title
         holder.mBookAuthor.text = book.author
+        holder.mBookDescription.text = book.description.toString()
+
+        holder.mBuyBtn.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(book.amazonUrl))
+            startActivity(it.context, browserIntent, null)
+        }
 
         holder.mView.setOnClickListener {
             holder.mItem?.let { book ->
